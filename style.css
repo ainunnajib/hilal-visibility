@@ -457,10 +457,10 @@ body {
 }
 
 /* Zone Colors - Matching the map generation script */
-.zone-a { background-color: #ff0000; } /* Red */
-.zone-b { background-color: #ff00ff; } /* Magenta */
-.zone-c { background-color: #00ffff; } /* Cyan */
-.zone-d { background-color: #0000ff; } /* Blue */
+.zone-a { background-color: #0000ff; } /* Blue — easiest */
+.zone-b { background-color: #00ffff; } /* Cyan */
+.zone-c { background-color: #ff00ff; } /* Magenta */
+.zone-d { background-color: #ff0000; } /* Red — hardest */
 .khgt-line { 
     background-color: #ffff00; /* Yellow */
     height: 4px;
@@ -768,10 +768,10 @@ body {
     border: 1px solid #555;
 }
 
-.vis-dot.zone-a { background: red; }
-.vis-dot.zone-b { background: magenta; }
-.vis-dot.zone-c { background: cyan; }
-.vis-dot.zone-d { background: blue; }
+.vis-dot.zone-a { background: blue; }
+.vis-dot.zone-b { background: cyan; }
+.vis-dot.zone-c { background: magenta; }
+.vis-dot.zone-d { background: red; }
 .vis-dot.zone-none { background: #222; }
 
 .month-start-text {

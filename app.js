@@ -35,10 +35,10 @@ const I18N = {
         methodologyTitle: 'Metodologi',
         methodologyDesc: 'Peta ini menggunakan <strong>Kriteria Shaukat</strong> yang dikembangkan oleh Khalid Shaukat, berdasarkan analisis ekstensif data pengamatan hilal historis. Kriteria ini mempertimbangkan altitude bulan, lebar sabit, dan kondisi pengamatan untuk memprediksi zona visibilitas.',
         zoneClassTitle: 'Klasifikasi Zona',
-        zoneALabel: 'Zona A (Merah):', zoneADesc: 'Hilal mudah terlihat dengan mata telanjang dalam kondisi baik',
-        zoneBLabel: 'Zona B (Magenta):', zoneBDesc: 'Terlihat dengan mata telanjang hanya dalam kondisi sempurna',
-        zoneCLabel: 'Zona C (Cyan):', zoneCDesc: 'Perlu alat bantu optik untuk menemukan, lalu terlihat mata telanjang',
-        zoneDLabel: 'Zona D (Biru):', zoneDDesc: 'Hanya terlihat dengan alat bantu optik (teropong/teleskop)',
+        zoneALabel: 'Zona A (Biru):', zoneADesc: 'Hilal mudah terlihat dengan mata telanjang dalam kondisi baik',
+        zoneBLabel: 'Zona B (Cyan):', zoneBDesc: 'Terlihat dengan mata telanjang hanya dalam kondisi sempurna',
+        zoneCLabel: 'Zona C (Magenta):', zoneCDesc: 'Perlu alat bantu optik untuk menemukan, lalu terlihat mata telanjang',
+        zoneDLabel: 'Zona D (Merah):', zoneDDesc: 'Hanya terlihat dengan alat bantu optik (teropong/teleskop)',
         khgtTitle: 'Kriteria Turki 2016 / KHGT',
         khgtDesc: 'Garis kuning mewakili kriteria Turki 2016 (juga dikenal sebagai KHGT), yang mensyaratkan elongasi ≥ 8° DAN altitude bulan ≥ 5°.',
         obsDateTitle: 'Tanggal Pengamatan',
@@ -96,10 +96,10 @@ const I18N = {
         methodologyTitle: 'Methodology',
         methodologyDesc: 'These maps use the <strong>Shaukat Criterion</strong> developed by Khalid Shaukat, based on extensive analysis of historical crescent sighting data. The criterion considers moon altitude, crescent width, and observing conditions to predict visibility zones.',
         zoneClassTitle: 'Zone Classification',
-        zoneALabel: 'Zone A (Red):', zoneADesc: 'Crescent easily visible to naked eye under good conditions',
-        zoneBLabel: 'Zone B (Magenta):', zoneBDesc: 'Visible to naked eye only under perfect conditions',
-        zoneCLabel: 'Zone C (Cyan):', zoneCDesc: 'Optical aid needed to locate, then visible to naked eye',
-        zoneDLabel: 'Zone D (Blue):', zoneDDesc: 'Visible only with optical aid (binoculars/telescope)',
+        zoneALabel: 'Zone A (Blue):', zoneADesc: 'Crescent easily visible to naked eye under good conditions',
+        zoneBLabel: 'Zone B (Cyan):', zoneBDesc: 'Visible to naked eye only under perfect conditions',
+        zoneCLabel: 'Zone C (Magenta):', zoneCDesc: 'Optical aid needed to locate, then visible to naked eye',
+        zoneDLabel: 'Zone D (Red):', zoneDDesc: 'Visible only with optical aid (binoculars/telescope)',
         khgtTitle: 'Turkey 2016 / KHGT Criterion',
         khgtDesc: 'The yellow line represents the Turkey 2016 criterion (also known as KHGT), which requires both elongation ≥ 8° AND moon altitude ≥ 5°.',
         obsDateTitle: 'Observation Dates',
@@ -436,10 +436,11 @@ class HilalApp {
 
     pxZone(r, g, b, a) {
         if (a < 100) return null;
-        if (r > 150 && g < 80 && b < 80) return 'A';
-        if (r > 150 && g < 80 && b > 150) return 'B';
-        if (r < 80 && g > 150 && b > 150) return 'C';
-        if (r < 80 && g < 80 && b > 150) return 'D';
+        // New colors: Red=D(outer/hardest), Magenta=C, Cyan=B, Blue=A(inner/easiest)
+        if (r > 150 && g < 80 && b < 80) return 'D';
+        if (r > 150 && g < 80 && b > 150) return 'C';
+        if (r < 80 && g > 150 && b > 150) return 'B';
+        if (r < 80 && g < 80 && b > 150) return 'A';
         if (r > 180 && g > 180 && b < 80) return 'KHGT';
         return null;
     }
