@@ -207,7 +207,7 @@ class HilalApp {
             'map-title': mapData.title,
             'hijri-month': `${this.monthNames[mapData.hijri_month].ar} (${this.monthNames[mapData.hijri_month].en})`,
             'hijri-year': `${mapData.hijri_year} H`,
-            'observation-date': this.formatDate(mapData.observation_date),
+            'observation-date': this.formatDate(mapData.observation_date_night1),
             'month-start': this.formatDate(mapData.month_start_gregorian)
         };
 
@@ -217,18 +217,37 @@ class HilalApp {
                 element.textContent = value;
             }
         });
+
+        // Update the three night dates
+        this.updateNightDates(mapData);
     }
 
     /**
-     * Update the map image
+     * Update the three night map images
      */
     updateMapImage(mapData) {
-        const mapImage = document.getElementById('map-image');
-        const mapPlaceholder = document.getElementById('map-placeholder');
+        // Update all three night maps
+        const nights = [
+            { id: 'night1', filename: mapData.filename_night1 },
+            { id: 'night2', filename: mapData.filename_night2 },
+            { id: 'night3', filename: mapData.filename_night3 }
+        ];
+
+        nights.forEach(night => {
+            this.updateSingleNightMap(night.id, night.filename, mapData.title);
+        });
+    }
+
+    /**
+     * Update a single night map
+     */
+    updateSingleNightMap(nightId, filename, title) {
+        const mapImage = document.getElementById(`map-image-${nightId}`);
+        const mapPlaceholder = document.getElementById(`map-placeholder-${nightId}`);
         
         if (!mapImage) return;
 
-        // Hide placeholder
+        // Hide placeholder initially
         if (mapPlaceholder) {
             mapPlaceholder.style.display = 'none';
         }
@@ -240,10 +259,13 @@ class HilalApp {
         const testImage = new Image();
         
         testImage.onload = () => {
-            mapImage.src = `./maps/${mapData.filename}`;
-            mapImage.alt = `Hilal visibility map for ${mapData.title}`;
+            mapImage.src = `./maps/${filename}`;
+            mapImage.alt = `${title} ${nightId.charAt(0).toUpperCase() + nightId.slice(1)}`;
             mapImage.classList.remove('map-loading');
             mapImage.style.display = 'block';
+            
+            // Add click handler for fullscreen view
+            mapImage.onclick = () => this.openFullscreenMap(filename, title, nightId);
         };
         
         testImage.onerror = () => {
@@ -255,7 +277,25 @@ class HilalApp {
             }
         };
         
-        testImage.src = `./maps/${mapData.filename}`;
+        testImage.src = `./maps/${filename}`;
+    }
+
+    /**
+     * Update the night dates display
+     */
+    updateNightDates(mapData) {
+        const nightDates = [
+            { id: 'night1-date', date: mapData.observation_date_night1 },
+            { id: 'night2-date', date: mapData.observation_date_night2 },
+            { id: 'night3-date', date: mapData.observation_date_night3 }
+        ];
+
+        nightDates.forEach(({ id, date }) => {
+            const element = document.getElementById(id);
+            if (element && date) {
+                element.textContent = `Evening, ${this.formatDate(date)}`;
+            }
+        });
     }
 
     /**
@@ -280,14 +320,131 @@ class HilalApp {
             }
         });
 
-        // Show placeholder instead of map
-        const mapImage = document.getElementById('map-image');
-        const mapPlaceholder = document.getElementById('map-placeholder');
-        
-        if (mapImage) mapImage.style.display = 'none';
-        if (mapPlaceholder) mapPlaceholder.style.display = 'block';
+        // Show placeholders for all three nights
+        ['night1', 'night2', 'night3'].forEach(nightId => {
+            const mapImage = document.getElementById(`map-image-${nightId}`);
+            const mapPlaceholder = document.getElementById(`map-placeholder-${nightId}`);
+            
+            if (mapImage) mapImage.style.display = 'none';
+            if (mapPlaceholder) mapPlaceholder.style.display = 'block';
+        });
+
+        // Update night dates
+        ['night1-date', 'night2-date', 'night3-date'].forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.textContent = 'Evening, calculating...';
+            }
+        });
 
         this.showMapContainer();
+    }
+
+    /**
+     * Open fullscreen map view
+     */
+    openFullscreenMap(filename, title, nightId) {
+        // Create fullscreen overlay
+        const overlay = document.createElement('div');
+        overlay.className = 'fullscreen-overlay';
+        overlay.innerHTML = `
+            <div class="fullscreen-content">
+                <div class="fullscreen-header">
+                    <h3>${title} - ${nightId.charAt(0).toUpperCase() + nightId.slice(1)}</h3>
+                    <button class="close-btn" onclick="this.closest('.fullscreen-overlay').remove()">×</button>
+                </div>
+                <img src="./maps/${filename}" alt="${title} ${nightId}" class="fullscreen-image">
+            </div>
+        `;
+        
+        // Add styles
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+        `;
+
+        const content = overlay.querySelector('.fullscreen-content');
+        content.style.cssText = `
+            background: #1a1a1a;
+            border-radius: 12px;
+            border: 2px solid #ffd700;
+            max-width: 95%;
+            max-height: 95%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        `;
+
+        const header = overlay.querySelector('.fullscreen-header');
+        header.style.cssText = `
+            background: #333;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #444;
+        `;
+
+        const title_elem = header.querySelector('h3');
+        title_elem.style.cssText = `
+            color: #ffd700;
+            margin: 0;
+            font-size: 1.3rem;
+        `;
+
+        const closeBtn = header.querySelector('.close-btn');
+        closeBtn.style.cssText = `
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: background 0.2s;
+        `;
+
+        const img = overlay.querySelector('.fullscreen-image');
+        img.style.cssText = `
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            flex: 1;
+            min-height: 0;
+        `;
+
+        // Close on overlay click
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                overlay.remove();
+            }
+        });
+
+        // Close on escape key
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') {
+                overlay.remove();
+                document.removeEventListener('keydown', handleEscape);
+            }
+        };
+        document.addEventListener('keydown', handleEscape);
+
+        document.body.appendChild(overlay);
     }
 
     /**

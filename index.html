@@ -39,6 +39,17 @@
                 <h2>Welcome to Hilal Visibility Maps</h2>
                 <p>Select a Hijri year above to view crescent moon visibility predictions for each month. These maps show where and when the new crescent moon (hilal) can be sighted after conjunction.</p>
                 
+                <div class="three-nights-explanation">
+                    <h3>3-Night Visibility Story</h3>
+                    <p>Each month shows <strong>three consecutive nights</strong> to illustrate how the crescent moon visibility progresses:</p>
+                    <ul>
+                        <li><strong>Night 1:</strong> Traditional observation evening (often challenging)</li>
+                        <li><strong>Night 2:</strong> One day later (usually easier to spot)</li>
+                        <li><strong>Night 3:</strong> Two days later (clearly visible in most areas)</li>
+                    </ul>
+                    <p>This progression shows the dramatic improvement in visibility that occurs with each passing day.</p>
+                </div>
+                
                 <div class="legend-preview">
                     <h3>Map Legend</h3>
                     <div class="legend-items">
@@ -91,12 +102,48 @@
                     </div>
                 </div>
 
-                <!-- Map Image -->
-                <div class="map-display">
-                    <img id="map-image" src="" alt="Hilal Visibility Map" />
-                    <div class="map-placeholder" id="map-placeholder" style="display: none;">
-                        <p>📍 Map not available yet</p>
-                        <p>This map is being generated. Please check back later.</p>
+                <!-- 3-Night Maps Display -->
+                <div class="three-nights-display">
+                    <!-- Night 1 -->
+                    <div class="night-map">
+                        <div class="night-header">
+                            <h3>Night 1</h3>
+                            <p class="night-date" id="night1-date">Evening, Date</p>
+                        </div>
+                        <div class="map-wrapper">
+                            <img id="map-image-night1" src="" alt="Night 1 Hilal Visibility Map" class="night-map-image" />
+                            <div class="map-placeholder" id="map-placeholder-night1" style="display: none;">
+                                <p>📍 Map not available</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Night 2 -->
+                    <div class="night-map">
+                        <div class="night-header">
+                            <h3>Night 2</h3>
+                            <p class="night-date" id="night2-date">Evening, Date</p>
+                        </div>
+                        <div class="map-wrapper">
+                            <img id="map-image-night2" src="" alt="Night 2 Hilal Visibility Map" class="night-map-image" />
+                            <div class="map-placeholder" id="map-placeholder-night2" style="display: none;">
+                                <p>📍 Map not available</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Night 3 -->
+                    <div class="night-map">
+                        <div class="night-header">
+                            <h3>Night 3</h3>
+                            <p class="night-date" id="night3-date">Evening, Date</p>
+                        </div>
+                        <div class="map-wrapper">
+                            <img id="map-image-night3" src="" alt="Night 3 Hilal Visibility Map" class="night-map-image" />
+                            <div class="map-placeholder" id="map-placeholder-night3" style="display: none;">
+                                <p>📍 Map not available</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
