@@ -37,6 +37,7 @@ class HilalApp {
             this.setupEventListeners();
             this.populateYearSelector();
             this.showWelcomeMessage();
+            window.hilalApp = this;
         } catch (error) {
             console.error('Failed to initialize app:', error);
             this.showError('Failed to load map data. Please refresh the page.');
@@ -171,12 +172,16 @@ class HilalApp {
      * Display the map for the selected year/month
      */
     displayMap(year, month) {
+        console.log('displayMap called:', year, month);
         const mapData = this.getMapForMonth(year, month);
         
         if (!mapData) {
+            console.log('No map data found for', year, month);
             this.showMapPlaceholder(year, month);
             return;
         }
+
+        console.log('Map data:', mapData.filename_night1, mapData.filename_night2, mapData.filename_night3);
 
         // Update info panel
         this.updateInfoPanel(mapData);
