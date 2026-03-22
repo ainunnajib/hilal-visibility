@@ -1,235 +1,177 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="id" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hilal Visibility Maps — Crescent Moon Sighting Predictions</title>
-    <meta name="description" content="Interactive hilal (crescent moon) visibility maps based on Shaukat Criterion & Turkey 2016/KHGT Parameters for Islamic calendar years 1447-1452 (2025-2031 CE)">
-    <meta name="keywords" content="hilal, crescent moon, Islamic calendar, moon sighting, Shaukat criterion, KHGT, Turkey 2016, Hijri calendar, lunar calendar">
-    <link rel="stylesheet" href="style.css?v=4">
+    <title>Kawal Hilal — Peta Visibilitas Hilal</title>
+    <meta name="description" content="Peta prediksi visibilitas hilal (bulan sabit) berdasarkan Kriteria Shaukat & Parameter Turki 2016/KHGT untuk kalender Hijriah 1447-1452 (2025-2031 M)">
+    <meta name="keywords" content="hilal, bulan sabit, kalender Islam, rukyatul hilal, kriteria Shaukat, KHGT, Turki 2016, kalender Hijriah, imkanurukyat, kawal hilal">
+    <link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
     <div class="container">
         <!-- Header -->
         <header class="header">
-            <h1 class="main-title">🌙 Hilal Visibility Maps</h1>
-            <p class="subtitle">Crescent Moon Sighting Predictions</p>
-            <p class="methodology">Based on Shaukat Criterion & Turkey 2016/KHGT Parameters</p>
+            <div class="header-top">
+                <h1 class="main-title">🌙 Kawal Hilal</h1>
+                <div class="lang-switcher">
+                    <button id="lang-id" class="lang-btn active" onclick="hilalApp.setLang('id')">🇮🇩 ID</button>
+                    <button id="lang-en" class="lang-btn" onclick="hilalApp.setLang('en')">🇬🇧 EN</button>
+                </div>
+            </div>
+            <p class="subtitle" data-i18n="subtitle">Peta Prediksi Visibilitas Hilal</p>
+            <p class="methodology" data-i18n="methodology">Berdasarkan Kriteria Shaukat & Parameter Turki 2016/KHGT</p>
         </header>
 
         <!-- Navigation -->
         <nav class="navigation">
             <div class="year-selector">
-                <label for="year-select">Hijri Year:</label>
+                <label for="year-select" data-i18n="hijriYear">Tahun Hijriah:</label>
                 <select id="year-select">
-                    <option value="">Select Year</option>
-                    <!-- Options will be populated by JavaScript -->
+                    <option value="" data-i18n="selectYear">Pilih Tahun</option>
                 </select>
             </div>
-            
-            <div class="month-grid" id="month-grid">
-                <!-- Month buttons will be populated by JavaScript -->
-            </div>
+            <div class="month-grid" id="month-grid"></div>
         </nav>
 
         <!-- Main Content -->
         <main class="main-content">
             <!-- Welcome Message -->
             <div class="welcome-message" id="welcome-message">
-                <h2>Welcome to Hilal Visibility Maps</h2>
-                <p>Select a Hijri year above to view crescent moon visibility predictions for each month. These maps show where and when the new crescent moon (hilal) can be sighted after conjunction.</p>
+                <h2 data-i18n="welcomeTitle">Selamat Datang di Kawal Hilal</h2>
+                <p data-i18n="welcomeDesc">Pilih tahun Hijriah di atas untuk melihat prediksi visibilitas hilal setiap bulan. Peta ini menunjukkan di mana dan kapan hilal (bulan sabit baru) dapat diamati setelah konjungsi.</p>
                 
                 <div class="three-nights-explanation">
-                    <h3>3-Night Visibility Story</h3>
-                    <p>Each month shows <strong>three consecutive nights</strong> to illustrate how the crescent moon visibility progresses:</p>
+                    <h3 data-i18n="threeNightsTitle">Cerita Visibilitas 3 Malam</h3>
+                    <p><span data-i18n="threeNightsDesc">Setiap bulan menampilkan <strong>tiga malam berturut-turut</strong> untuk menunjukkan perkembangan visibilitas hilal:</span></p>
                     <ul>
-                        <li><strong>Night 1:</strong> Traditional observation evening (often challenging)</li>
-                        <li><strong>Night 2:</strong> One day later (usually easier to spot)</li>
-                        <li><strong>Night 3:</strong> Two days later (clearly visible in most areas)</li>
+                        <li><strong data-i18n="night1Label">Malam 1:</strong> <span data-i18n="night1Desc">Malam pengamatan tradisional (sering sulit)</span></li>
+                        <li><strong data-i18n="night2Label">Malam 2:</strong> <span data-i18n="night2Desc">Satu hari kemudian (biasanya lebih mudah)</span></li>
+                        <li><strong data-i18n="night3Label">Malam 3:</strong> <span data-i18n="night3Desc">Dua hari kemudian (jelas terlihat di sebagian besar wilayah)</span></li>
                     </ul>
-                    <p>This progression shows the dramatic improvement in visibility that occurs with each passing day.</p>
+                    <p data-i18n="threeNightsConclusion">Progesi ini menunjukkan peningkatan dramatis visibilitas yang terjadi setiap hari.</p>
                 </div>
                 
                 <div class="legend-preview">
-                    <h3>Map Legend</h3>
+                    <h3 data-i18n="legendTitle">Legenda Peta</h3>
                     <div class="legend-items">
-                        <div class="legend-item">
-                            <span class="legend-color zone-a"></span>
-                            <span class="legend-text">Zone A: Easily visible (naked eye)</span>
-                        </div>
-                        <div class="legend-item">
-                            <span class="legend-color zone-b"></span>
-                            <span class="legend-text">Zone B: Visible (perfect conditions)</span>
-                        </div>
-                        <div class="legend-item">
-                            <span class="legend-color zone-c"></span>
-                            <span class="legend-text">Zone C: Optical aid to find</span>
-                        </div>
-                        <div class="legend-item">
-                            <span class="legend-color zone-d"></span>
-                            <span class="legend-text">Zone D: Visible with optical aid</span>
-                        </div>
-                        <div class="legend-item">
-                            <span class="legend-color khgt-line"></span>
-                            <span class="legend-text">Turkey 2016 / KHGT criterion</span>
-                        </div>
+                        <div class="legend-item"><span class="legend-color zone-a"></span><span class="legend-text" data-i18n="zoneA">Zona A: Mudah terlihat (mata telanjang)</span></div>
+                        <div class="legend-item"><span class="legend-color zone-b"></span><span class="legend-text" data-i18n="zoneB">Zona B: Terlihat (kondisi sempurna)</span></div>
+                        <div class="legend-item"><span class="legend-color zone-c"></span><span class="legend-text" data-i18n="zoneC">Zona C: Perlu alat bantu optik untuk menemukan</span></div>
+                        <div class="legend-item"><span class="legend-color zone-d"></span><span class="legend-text" data-i18n="zoneD">Zona D: Terlihat hanya dengan alat bantu optik</span></div>
+                        <div class="legend-item"><span class="legend-color khgt-line"></span><span class="legend-text" data-i18n="khgtLine">Kriteria Turki 2016 / KHGT</span></div>
                     </div>
                 </div>
             </div>
 
             <!-- Map Display -->
             <div class="map-container" id="map-container" style="display: none;">
-                <!-- Info Panel -->
                 <div class="info-panel" id="info-panel">
-                    <h2 id="map-title">Month Name Year</h2>
+                    <h2 id="map-title">-</h2>
                     <div class="map-details">
                         <div class="detail-item">
-                            <span class="detail-label">Hijri Month:</span>
+                            <span class="detail-label" data-i18n="hijriMonthLabel">Bulan Hijriah:</span>
                             <span class="detail-value" id="hijri-month"></span>
                         </div>
                         <div class="detail-item">
-                            <span class="detail-label">Hijri Year:</span>
+                            <span class="detail-label" data-i18n="hijriYearLabel">Tahun Hijriah:</span>
                             <span class="detail-value" id="hijri-year"></span>
                         </div>
                         <div class="detail-item">
-                            <span class="detail-label">Observation Date:</span>
+                            <span class="detail-label" data-i18n="obsDateLabel">Tanggal Pengamatan:</span>
                             <span class="detail-value" id="observation-date"></span>
                         </div>
                         <div class="detail-item location-visibility">
-                            <span class="detail-label">Visibility at your location:</span>
+                            <span class="detail-label" data-i18n="visAtLocation">Visibilitas di lokasi Anda:</span>
                             <div class="location-controls">
-                                <button id="detect-location-btn" title="Use my location" onclick="hilalApp.detectLocation()">📍 Detect</button>
-                                <input type="text" id="location-input" placeholder="e.g. 21.4, 39.8 (Makkah)" />
-                                <button id="check-location-btn" onclick="hilalApp.checkLocationVisibility()">Check</button>
+                                <button id="detect-location-btn" title="Gunakan lokasi saya" onclick="hilalApp.detectLocation()">📍 <span data-i18n="detectBtn">Deteksi</span></button>
+                                <input type="text" id="location-input" data-i18n-placeholder="locationPlaceholder" placeholder="contoh: -6.2, 106.8 (Jakarta)" />
+                                <button id="check-location-btn" onclick="hilalApp.checkLocationVisibility()" data-i18n="checkBtn">Cek</button>
                             </div>
                             <div id="location-result" class="location-result"></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 3-Night Maps Display -->
                 <div class="three-nights-display">
-                    <!-- Night 1 -->
                     <div class="night-map">
                         <div class="night-header">
-                            <h3>Night 1</h3>
-                            <p class="night-date" id="night1-date">Evening, Date</p>
+                            <h3 data-i18n="night1Header">Malam 1</h3>
+                            <p class="night-date" id="night1-date">-</p>
                         </div>
                         <div class="map-wrapper">
-                            <img id="map-image-night1" src="" alt="Night 1 Hilal Visibility Map" class="night-map-image" />
-                            <div class="map-placeholder" id="map-placeholder-night1" style="display: none;">
-                                <p>📍 Map not available</p>
-                            </div>
+                            <img id="map-image-night1" src="" alt="" class="night-map-image" />
+                            <div class="map-placeholder" id="map-placeholder-night1" style="display:none;"><p>📍</p></div>
                         </div>
                     </div>
-
-                    <!-- Night 2 -->
                     <div class="night-map">
                         <div class="night-header">
-                            <h3>Night 2</h3>
-                            <p class="night-date" id="night2-date">Evening, Date</p>
+                            <h3 data-i18n="night2Header">Malam 2</h3>
+                            <p class="night-date" id="night2-date">-</p>
                         </div>
                         <div class="map-wrapper">
-                            <img id="map-image-night2" src="" alt="Night 2 Hilal Visibility Map" class="night-map-image" />
-                            <div class="map-placeholder" id="map-placeholder-night2" style="display: none;">
-                                <p>📍 Map not available</p>
-                            </div>
+                            <img id="map-image-night2" src="" alt="" class="night-map-image" />
+                            <div class="map-placeholder" id="map-placeholder-night2" style="display:none;"><p>📍</p></div>
                         </div>
                     </div>
-
-                    <!-- Night 3 -->
                     <div class="night-map">
                         <div class="night-header">
-                            <h3>Night 3</h3>
-                            <p class="night-date" id="night3-date">Evening, Date</p>
+                            <h3 data-i18n="night3Header">Malam 3</h3>
+                            <p class="night-date" id="night3-date">-</p>
                         </div>
                         <div class="map-wrapper">
-                            <img id="map-image-night3" src="" alt="Night 3 Hilal Visibility Map" class="night-map-image" />
-                            <div class="map-placeholder" id="map-placeholder-night3" style="display: none;">
-                                <p>📍 Map not available</p>
-                            </div>
+                            <img id="map-image-night3" src="" alt="" class="night-map-image" />
+                            <div class="map-placeholder" id="map-placeholder-night3" style="display:none;"><p>📍</p></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Legend -->
                 <div class="legend">
-                    <h3>Legend</h3>
+                    <h3 data-i18n="legendTitle">Legenda</h3>
                     <div class="legend-items">
-                        <div class="legend-item">
-                            <span class="legend-color zone-a"></span>
-                            <span class="legend-text">Zone A: Easily visible (naked eye)</span>
-                        </div>
-                        <div class="legend-item">
-                            <span class="legend-color zone-b"></span>
-                            <span class="legend-text">Zone B: Visible (perfect conditions)</span>
-                        </div>
-                        <div class="legend-item">
-                            <span class="legend-color zone-c"></span>
-                            <span class="legend-text">Zone C: Optical aid to find</span>
-                        </div>
-                        <div class="legend-item">
-                            <span class="legend-color zone-d"></span>
-                            <span class="legend-text">Zone D: Visible with optical aid</span>
-                        </div>
-                        <div class="legend-item">
-                            <span class="legend-color khgt-line"></span>
-                            <span class="legend-text">Turkey 2016 / KHGT criterion</span>
-                        </div>
+                        <div class="legend-item"><span class="legend-color zone-a"></span><span class="legend-text" data-i18n="zoneA">Zona A: Mudah terlihat (mata telanjang)</span></div>
+                        <div class="legend-item"><span class="legend-color zone-b"></span><span class="legend-text" data-i18n="zoneB">Zona B: Terlihat (kondisi sempurna)</span></div>
+                        <div class="legend-item"><span class="legend-color zone-c"></span><span class="legend-text" data-i18n="zoneC">Zona C: Perlu alat bantu optik</span></div>
+                        <div class="legend-item"><span class="legend-color zone-d"></span><span class="legend-text" data-i18n="zoneD">Zona D: Hanya dengan alat bantu optik</span></div>
+                        <div class="legend-item"><span class="legend-color khgt-line"></span><span class="legend-text" data-i18n="khgtLine">Kriteria Turki 2016 / KHGT</span></div>
                     </div>
-                    <p class="legend-note">
-                        The yellow line shows the Turkey 2016/KHGT criterion boundary 
-                        (elongation ≥ 8° AND moon altitude ≥ 5°).
-                    </p>
+                    <p class="legend-note" data-i18n="legendNote">Garis kuning menunjukkan batas kriteria Turki 2016/KHGT (elongasi ≥ 8° DAN altitude bulan ≥ 5°).</p>
                 </div>
             </div>
         </main>
 
-        <!-- About Section -->
+        <!-- About -->
         <section class="about" id="about-section">
-            <h2>About These Maps</h2>
-            
+            <h2 data-i18n="aboutTitle">Tentang Peta Ini</h2>
             <div class="about-content">
                 <div class="about-item">
-                    <h3>🔬 Methodology</h3>
-                    <p>These maps use the <strong>Shaukat Criterion</strong> developed by Khalid Shaukat, 
-                    based on extensive analysis of historical crescent sighting data. The criterion 
-                    considers moon altitude, crescent width, and observing conditions to predict 
-                    visibility zones.</p>
+                    <h3>🔬 <span data-i18n="methodologyTitle">Metodologi</span></h3>
+                    <p data-i18n="methodologyDesc">Peta ini menggunakan <strong>Kriteria Shaukat</strong> yang dikembangkan oleh Khalid Shaukat, berdasarkan analisis ekstensif data pengamatan hilal historis. Kriteria ini mempertimbangkan altitude bulan, lebar sabit, dan kondisi pengamatan untuk memprediksi zona visibilitas.</p>
                 </div>
-
                 <div class="about-item">
-                    <h3>📊 Zone Classification</h3>
+                    <h3>📊 <span data-i18n="zoneClassTitle">Klasifikasi Zona</span></h3>
                     <ul>
-                        <li><strong>Zone A (Red):</strong> Crescent easily visible to naked eye under good conditions</li>
-                        <li><strong>Zone B (Magenta):</strong> Visible to naked eye only under perfect conditions</li>
-                        <li><strong>Zone C (Cyan):</strong> Optical aid needed to locate, then visible to naked eye</li>
-                        <li><strong>Zone D (Blue):</strong> Visible only with optical aid (binoculars/telescope)</li>
+                        <li><strong data-i18n="zoneALabel">Zona A (Merah):</strong> <span data-i18n="zoneADesc">Hilal mudah terlihat dengan mata telanjang dalam kondisi baik</span></li>
+                        <li><strong data-i18n="zoneBLabel">Zona B (Magenta):</strong> <span data-i18n="zoneBDesc">Terlihat dengan mata telanjang hanya dalam kondisi sempurna</span></li>
+                        <li><strong data-i18n="zoneCLabel">Zona C (Cyan):</strong> <span data-i18n="zoneCDesc">Perlu alat bantu optik untuk menemukan, lalu terlihat mata telanjang</span></li>
+                        <li><strong data-i18n="zoneDLabel">Zona D (Biru):</strong> <span data-i18n="zoneDDesc">Hanya terlihat dengan alat bantu optik (teropong/teleskop)</span></li>
                     </ul>
                 </div>
-
                 <div class="about-item">
-                    <h3>🔶 Turkey 2016 / KHGT Criterion</h3>
-                    <p>The yellow line represents the Turkey 2016 criterion (also known as KHGT), 
-                    which requires both elongation ≥ 8° AND moon altitude ≥ 5°. This is a simpler, 
-                    more conservative criterion used by some astronomical organizations.</p>
+                    <h3>🔶 <span data-i18n="khgtTitle">Kriteria Turki 2016 / KHGT</span></h3>
+                    <p data-i18n="khgtDesc">Garis kuning mewakili kriteria Turki 2016 (juga dikenal sebagai KHGT), yang mensyaratkan elongasi ≥ 8° DAN altitude bulan ≥ 5°. Ini adalah kriteria yang lebih konservatif yang digunakan oleh beberapa organisasi astronomi.</p>
                 </div>
-
                 <div class="about-item">
-                    <h3>📅 Observation Dates</h3>
-                    <p>Each map shows visibility for the evening <em>before</em> the new Hijri month begins.
-                    This is when Muslim communities traditionally look for the new crescent moon to 
-                    determine the start of lunar months, especially for religious observances like 
-                    Ramadan and Eid celebrations.</p>
+                    <h3>📅 <span data-i18n="obsDateTitle">Tanggal Pengamatan</span></h3>
+                    <p data-i18n="obsDateDesc">Setiap peta menunjukkan visibilitas untuk malam <em>sebelum</em> bulan Hijriah baru dimulai. Ini adalah saat komunitas Muslim secara tradisional mencari hilal untuk menentukan awal bulan, terutama untuk ibadah seperti Ramadan dan Idul Fitri.</p>
                 </div>
-
                 <div class="about-item">
-                    <h3>⚠️ Important Notes</h3>
+                    <h3>⚠️ <span data-i18n="notesTitle">Catatan Penting</span></h3>
                     <ul>
-                        <li>These are theoretical predictions based on astronomical calculations</li>
-                        <li>Actual sighting depends on local weather, atmospheric conditions, and observer experience</li>
-                        <li>Always consult local religious authorities for official moon sighting announcements</li>
-                        <li>Maps use a 2° grid resolution for computational efficiency</li>
+                        <li data-i18n="note1">Ini adalah prediksi teoretis berdasarkan perhitungan astronomi</li>
+                        <li data-i18n="note2">Pengamatan aktual tergantung cuaca lokal, kondisi atmosfer, dan pengalaman pengamat</li>
+                        <li data-i18n="note3">Selalu rujuk ke otoritas keagamaan lokal untuk pengumuman resmi rukyatul hilal</li>
+                        <li data-i18n="note4">Peta menggunakan resolusi grid 2° untuk efisiensi komputasi</li>
                     </ul>
                 </div>
             </div>
@@ -237,23 +179,11 @@
 
         <!-- Footer -->
         <footer class="footer">
-            <p>
-                Maps generated using visibility calculations based on the 
-                <a href="http://moonsighting.com" target="_blank" rel="noopener">Shaukat Criterion</a>
-                developed by Khalid Shaukat at moonsighting.com.
-            </p>
-            <p>
-                Created with ❤️ for the Muslim community • 
-                Data covers Hijri years 1447-1452 (≈2025-2031 CE)
-            </p>
-            <p class="technical-note">
-                Technical implementation: PyEphem calculations, Shaukat/KHGT criteria, 
-                hijri-converter for date conversion
-            </p>
+            <p data-i18n="footerCredits">Peta dibuat menggunakan perhitungan visibilitas berdasarkan <a href="http://moonsighting.com" target="_blank" rel="noopener">Kriteria Shaukat</a> yang dikembangkan oleh Khalid Shaukat di moonsighting.com.</p>
+            <p data-i18n="footerMade">Dibuat dengan ❤️ untuk umat Muslim • Data mencakup tahun Hijriah 1447-1452 (≈2025-2031 M)</p>
+            <p class="technical-note">KawalHilal.com • PyEphem • Shaukat/KHGT • hijri-converter</p>
         </footer>
     </div>
-
-    <!-- JavaScript -->
-    <script src="app.js?v=4"></script>
+    <script src="app.js?v=5"></script>
 </body>
 </html>

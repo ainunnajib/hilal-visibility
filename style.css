@@ -779,3 +779,39 @@ body {
     font-weight: bold;
     margin-top: 6px;
 }
+
+/* Language switcher */
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.lang-switcher {
+    display: flex;
+    gap: 4px;
+}
+
+.lang-btn {
+    background: #2a2a3a;
+    color: #888;
+    border: 1px solid #444;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.2s;
+}
+
+.lang-btn.active {
+    background: #3a3a5a;
+    color: #ffd700;
+    border-color: #ffd700;
+}
+
+.lang-btn:hover {
+    border-color: #ffd700;
+    color: #e0e0e0;
+}
