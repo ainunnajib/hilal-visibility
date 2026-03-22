@@ -23,14 +23,19 @@
     Cache-Control = "public, max-age=86400" # 1 day
     
 [[headers]]
-  for = "/style.css"
+  for = "/style.css*"
   [headers.values]
-    Cache-Control = "public, max-age=3600" # 1 hour
+    Cache-Control = "public, max-age=300" # 5 min
     
 [[headers]]
-  for = "/app.js"
+  for = "/app.js*"
   [headers.values]
-    Cache-Control = "public, max-age=3600" # 1 hour
+    Cache-Control = "public, max-age=300" # 5 min
+
+[[headers]]
+  for = "/maps/maps_metadata.json"
+  [headers.values]
+    Cache-Control = "public, max-age=300" # 5 min
 
 # Custom error page (optional)
 # [[redirects]]
