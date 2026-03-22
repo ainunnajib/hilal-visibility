@@ -247,37 +247,28 @@ class HilalApp {
         
         if (!mapImage) return;
 
-        // Hide placeholder initially
+        if (!filename) {
+            mapImage.style.display = 'none';
+            if (mapPlaceholder) mapPlaceholder.style.display = 'block';
+            return;
+        }
+
+        // Hide placeholder
         if (mapPlaceholder) {
             mapPlaceholder.style.display = 'none';
         }
 
-        // Show loading state
-        mapImage.classList.add('map-loading');
+        // Set image directly — simpler and more reliable
+        mapImage.src = `./maps/${filename}`;
+        mapImage.alt = `${title} ${nightId.charAt(0).toUpperCase() + nightId.slice(1)}`;
+        mapImage.style.display = 'block';
+        mapImage.onclick = () => this.openFullscreenMap(filename, title, nightId);
         
-        // Create new image to test if file exists
-        const testImage = new Image();
-        
-        testImage.onload = () => {
-            mapImage.src = `./maps/${filename}`;
-            mapImage.alt = `${title} ${nightId.charAt(0).toUpperCase() + nightId.slice(1)}`;
-            mapImage.classList.remove('map-loading');
-            mapImage.style.display = 'block';
-            
-            // Add click handler for fullscreen view
-            mapImage.onclick = () => this.openFullscreenMap(filename, title, nightId);
-        };
-        
-        testImage.onerror = () => {
-            // Image doesn't exist, show placeholder
+        // Handle load error
+        mapImage.onerror = () => {
             mapImage.style.display = 'none';
-            mapImage.classList.remove('map-loading');
-            if (mapPlaceholder) {
-                mapPlaceholder.style.display = 'block';
-            }
+            if (mapPlaceholder) mapPlaceholder.style.display = 'block';
         };
-        
-        testImage.src = `./maps/${filename}`;
     }
 
     /**
