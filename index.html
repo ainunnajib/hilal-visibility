@@ -6,7 +6,7 @@
     <title>Hilal Visibility Maps — Crescent Moon Sighting Predictions</title>
     <meta name="description" content="Interactive hilal (crescent moon) visibility maps based on Shaukat Criterion & Turkey 2016/KHGT Parameters for Islamic calendar years 1447-1452 (2025-2031 CE)">
     <meta name="keywords" content="hilal, crescent moon, Islamic calendar, moon sighting, Shaukat criterion, KHGT, Turkey 2016, Hijri calendar, lunar calendar">
-    <link rel="stylesheet" href="style.css?v=3">
+    <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
     <div class="container">
@@ -95,9 +95,14 @@
                             <span class="detail-label">Observation Date:</span>
                             <span class="detail-value" id="observation-date"></span>
                         </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Month Start:</span>
-                            <span class="detail-value" id="month-start"></span>
+                        <div class="detail-item location-visibility">
+                            <span class="detail-label">Visibility at your location:</span>
+                            <div class="location-controls">
+                                <button id="detect-location-btn" title="Use my location" onclick="hilalApp.detectLocation()">📍 Detect</button>
+                                <input type="text" id="location-input" placeholder="e.g. 21.4, 39.8 (Makkah)" />
+                                <button id="check-location-btn" onclick="hilalApp.checkLocationVisibility()">Check</button>
+                            </div>
+                            <div id="location-result" class="location-result"></div>
                         </div>
                     </div>
                 </div>
@@ -249,6 +254,6 @@
     </div>
 
     <!-- JavaScript -->
-    <script src="app.js?v=3"></script>
+    <script src="app.js?v=4"></script>
 </body>
 </html>

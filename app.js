@@ -212,8 +212,7 @@ class HilalApp {
             'map-title': mapData.title,
             'hijri-month': `${this.monthNames[mapData.hijri_month].ar} (${this.monthNames[mapData.hijri_month].en})`,
             'hijri-year': `${mapData.hijri_year} H`,
-            'observation-date': this.formatDate(mapData.observation_date_night1),
-            'month-start': this.formatDate(mapData.month_start_gregorian)
+            'observation-date': this.formatDate(mapData.observation_date_night1)
         };
 
         Object.entries(elements).forEach(([id, value]) => {
@@ -305,8 +304,7 @@ class HilalApp {
             'map-title': `${monthName} ${year}H`,
             'hijri-month': `${this.monthNames[month].ar} (${monthName})`,
             'hijri-year': `${year} H`,
-            'observation-date': 'Calculating...',
-            'month-start': 'Calculating...'
+            'observation-date': 'Calculating...'
         };
 
         Object.entries(elements).forEach(([id, value]) => {
@@ -485,6 +483,239 @@ class HilalApp {
             });
         } catch (error) {
             return dateString;
+        }
+    }
+
+    /**
+     * Detect user location via browser geolocation API
+     */
+    detectLocation() {
+        const btn = document.getElementById('detect-location-btn');
+        const input = document.getElementById('location-input');
+        
+        if (!navigator.geolocation) {
+            this.showLocationResult('Geolocation not supported by your browser');
+            return;
+        }
+        
+        btn.textContent = '⏳ Detecting...';
+        btn.disabled = true;
+        
+        navigator.geolocation.getCurrentPosition(
+            (pos) => {
+                const lat = pos.coords.latitude.toFixed(2);
+                const lon = pos.coords.longitude.toFixed(2);
+                input.value = `${lat}, ${lon}`;
+                btn.textContent = '📍 Detect';
+                btn.disabled = false;
+                this.checkLocationVisibility();
+            },
+            (err) => {
+                btn.textContent = '📍 Detect';
+                btn.disabled = false;
+                this.showLocationResult('Location access denied. Enter coordinates manually.');
+            },
+            { timeout: 10000 }
+        );
+    }
+
+    /**
+     * Check visibility at entered location by sampling map pixel colors
+     */
+    checkLocationVisibility() {
+        const input = document.getElementById('location-input');
+        const val = input.value.trim();
+        
+        if (!val) {
+            this.showLocationResult('Enter lat, lon (e.g. 21.4, 39.8 for Makkah)');
+            return;
+        }
+        
+        const parts = val.split(',').map(s => parseFloat(s.trim()));
+        if (parts.length !== 2 || isNaN(parts[0]) || isNaN(parts[1])) {
+            this.showLocationResult('Invalid format. Use: latitude, longitude');
+            return;
+        }
+        
+        const [lat, lon] = parts;
+        if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+            this.showLocationResult('Coordinates out of range');
+            return;
+        }
+        
+        // Get current map data
+        const mapData = this.getMapForMonth(this.currentYear, this.currentMonth);
+        if (!mapData) {
+            this.showLocationResult('Select a month first');
+            return;
+        }
+        
+        // Sample all 3 night images
+        const nights = [
+            { id: 'night1', file: mapData.filename_night1, date: mapData.observation_date_night1 },
+            { id: 'night2', file: mapData.filename_night2, date: mapData.observation_date_night2 },
+            { id: 'night3', file: mapData.filename_night3, date: mapData.observation_date_night3 }
+        ];
+        
+        const results = [];
+        let loaded = 0;
+        
+        nights.forEach((night, idx) => {
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.onload = () => {
+                const zone = this.sampleZoneFromImage(img, lat, lon);
+                results[idx] = { ...night, zone };
+                loaded++;
+                if (loaded === 3) this.renderLocationResult(results, lat, lon, mapData);
+            };
+            img.onerror = () => {
+                results[idx] = { ...night, zone: null };
+                loaded++;
+                if (loaded === 3) this.renderLocationResult(results, lat, lon, mapData);
+            };
+            img.src = `./maps/${night.file}`;
+        });
+    }
+
+    /**
+     * Sample the visibility zone from a map image at given lat/lon
+     * Maps are PlateCarrée projection: -180 to 180 lon, -90 to 90 lat
+     */
+    sampleZoneFromImage(img, lat, lon) {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        
+        // Map coordinates to pixel position
+        // The map area within the image (approximate — matplotlib adds margins)
+        // Typical matplotlib PlateCarrée: ~12% left margin, ~5% right, ~12% top, ~15% bottom
+        const marginLeft = 0.095 * canvas.width;
+        const marginRight = 0.03 * canvas.width;
+        const marginTop = 0.11 * canvas.height;
+        const marginBottom = 0.13 * canvas.height;
+        
+        const plotWidth = canvas.width - marginLeft - marginRight;
+        const plotHeight = canvas.height - marginTop - marginBottom;
+        
+        // lon: -180 to 180 → 0 to plotWidth
+        const px = marginLeft + ((lon + 180) / 360) * plotWidth;
+        // lat: 90 to -90 → 0 to plotHeight (inverted Y)
+        const py = marginTop + ((90 - lat) / 180) * plotHeight;
+        
+        // Sample a small area (3x3) to be more robust
+        const zones = [];
+        for (let dx = -1; dx <= 1; dx++) {
+            for (let dy = -1; dy <= 1; dy++) {
+                const sx = Math.round(px + dx);
+                const sy = Math.round(py + dy);
+                if (sx >= 0 && sx < canvas.width && sy >= 0 && sy < canvas.height) {
+                    const pixel = ctx.getImageData(sx, sy, 1, 1).data;
+                    const z = this.pixelToZone(pixel[0], pixel[1], pixel[2], pixel[3]);
+                    if (z) zones.push(z);
+                }
+            }
+        }
+        
+        // Return most common non-null zone, or null
+        if (zones.length === 0) return null;
+        const counts = {};
+        zones.forEach(z => counts[z] = (counts[z] || 0) + 1);
+        return Object.entries(counts).sort((a, b) => b[1] - a[1])[0][0];
+    }
+
+    /**
+     * Map RGB pixel values to visibility zone
+     * Blue=D, Cyan=C, Magenta=B, Red=A, Yellow=KHGT line
+     */
+    pixelToZone(r, g, b, a) {
+        if (a < 100) return null; // transparent
+        
+        // Check against known zone colors (with tolerance)
+        const t = 60; // tolerance
+        
+        // Red (Zone A): ~(255, 0, 0) or ~(178, 0, 0) with alpha
+        if (r > 150 && g < 80 && b < 80) return 'A';
+        
+        // Magenta (Zone B): ~(255, 0, 255) or pinkish
+        if (r > 150 && g < 80 && b > 150) return 'B';
+        
+        // Cyan (Zone C): ~(0, 255, 255)
+        if (r < 80 && g > 150 && b > 150) return 'C';
+        
+        // Blue (Zone D): ~(0, 0, 255)
+        if (r < 80 && g < 80 && b > 150) return 'D';
+        
+        // Yellow (KHGT line): ~(255, 255, 0) — treat as "meets KHGT"
+        if (r > 180 && g > 180 && b < 80) return 'KHGT';
+        
+        return null; // black background or other
+    }
+
+    /**
+     * Render the location visibility result
+     */
+    renderLocationResult(results, lat, lon, mapData) {
+        const zoneLabels = {
+            'A': '🔴 Zone A — Easily visible (naked eye)',
+            'B': '🟣 Zone B — Visible in perfect conditions',
+            'C': '🔵 Zone C — Optical aid to find',
+            'D': '🔷 Zone D — Optical aid only',
+            'KHGT': '🟡 KHGT criterion met',
+            null: '⚫ Not visible'
+        };
+        
+        const zoneDots = {
+            'A': 'zone-a', 'B': 'zone-b', 'C': 'zone-c', 'D': 'zone-d',
+            'KHGT': 'zone-a', null: 'zone-none'
+        };
+
+        // Determine earliest visible night
+        let firstVisibleNight = null;
+        for (let i = 0; i < results.length; i++) {
+            if (results[i].zone && results[i].zone !== 'KHGT') {
+                firstVisibleNight = i;
+                break;
+            }
+        }
+
+        let html = `<div style="color:#aaa;margin-bottom:4px;">📍 ${lat.toFixed(1)}°, ${lon.toFixed(1)}°</div>`;
+        html += '<div class="night-visibility">';
+        
+        results.forEach((r, i) => {
+            const label = r.zone ? zoneLabels[r.zone] : zoneLabels[null];
+            const dotClass = r.zone ? zoneDots[r.zone] : 'zone-none';
+            const dateStr = r.date ? new Date(r.date + 'T00:00:00').toLocaleDateString('en-US', {month:'short', day:'numeric'}) : '?';
+            html += `<span class="night-vis-item"><span class="vis-dot ${dotClass}"></span> N${i+1} (${dateStr}): ${r.zone || 'None'}</span>`;
+        });
+        html += '</div>';
+
+        // Month start determination
+        if (firstVisibleNight !== null) {
+            const r = results[firstVisibleNight];
+            const startDate = new Date(r.date + 'T00:00:00');
+            startDate.setDate(startDate.getDate() + 1); // Month starts the day AFTER sighting
+            const startStr = startDate.toLocaleDateString('en-US', {year:'numeric', month:'long', day:'numeric'});
+            html += `<div class="month-start-text">🌙 Month likely starts: ${startStr} (based on Night ${firstVisibleNight + 1} visibility)</div>`;
+        } else {
+            html += `<div class="month-start-text" style="color:#ff6666;">❌ Crescent not visible at this location in any of the 3 nights</div>`;
+        }
+
+        const resultDiv = document.getElementById('location-result');
+        resultDiv.innerHTML = html;
+        resultDiv.classList.add('has-result');
+    }
+
+    /**
+     * Show a simple text result in the location result area
+     */
+    showLocationResult(text) {
+        const resultDiv = document.getElementById('location-result');
+        if (resultDiv) {
+            resultDiv.textContent = text;
+            resultDiv.classList.add('has-result');
         }
     }
 
