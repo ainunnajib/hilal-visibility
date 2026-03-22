@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hilal Visibility Maps — Crescent Moon Sighting Predictions</title>
+    <meta name="description" content="Interactive hilal (crescent moon) visibility maps based on Shaukat Criterion & Turkey 2016/KHGT Parameters for Islamic calendar years 1447-1452 (2025-2031 CE)">
+    <meta name="keywords" content="hilal, crescent moon, Islamic calendar, moon sighting, Shaukat criterion, KHGT, Turkey 2016, Hijri calendar, lunar calendar">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="main-title">🌙 Hilal Visibility Maps</h1>
+            <p class="subtitle">Crescent Moon Sighting Predictions</p>
+            <p class="methodology">Based on Shaukat Criterion & Turkey 2016/KHGT Parameters</p>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="navigation">
+            <div class="year-selector">
+                <label for="year-select">Hijri Year:</label>
+                <select id="year-select">
+                    <option value="">Select Year</option>
+                    <!-- Options will be populated by JavaScript -->
+                </select>
+            </div>
+            
+            <div class="month-grid" id="month-grid">
+                <!-- Month buttons will be populated by JavaScript -->
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Welcome Message -->
+            <div class="welcome-message" id="welcome-message">
+                <h2>Welcome to Hilal Visibility Maps</h2>
+                <p>Select a Hijri year above to view crescent moon visibility predictions for each month. These maps show where and when the new crescent moon (hilal) can be sighted after conjunction.</p>
+                
+                <div class="legend-preview">
+                    <h3>Map Legend</h3>
+                    <div class="legend-items">
+                        <div class="legend-item">
+                            <span class="legend-color zone-a"></span>
+                            <span class="legend-text">Zone A: Easily visible (naked eye)</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color zone-b"></span>
+                            <span class="legend-text">Zone B: Visible (perfect conditions)</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color zone-c"></span>
+                            <span class="legend-text">Zone C: Optical aid to find</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color zone-d"></span>
+                            <span class="legend-text">Zone D: Visible with optical aid</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color khgt-line"></span>
+                            <span class="legend-text">Turkey 2016 / KHGT criterion</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Map Display -->
+            <div class="map-container" id="map-container" style="display: none;">
+                <!-- Info Panel -->
+                <div class="info-panel" id="info-panel">
+                    <h2 id="map-title">Month Name Year</h2>
+                    <div class="map-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Hijri Month:</span>
+                            <span class="detail-value" id="hijri-month"></span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Hijri Year:</span>
+                            <span class="detail-value" id="hijri-year"></span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Observation Date:</span>
+                            <span class="detail-value" id="observation-date"></span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Month Start:</span>
+                            <span class="detail-value" id="month-start"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Map Image -->
+                <div class="map-display">
+                    <img id="map-image" src="" alt="Hilal Visibility Map" />
+                    <div class="map-placeholder" id="map-placeholder" style="display: none;">
+                        <p>📍 Map not available yet</p>
+                        <p>This map is being generated. Please check back later.</p>
+                    </div>
+                </div>
+
+                <!-- Legend -->
+                <div class="legend">
+                    <h3>Legend</h3>
+                    <div class="legend-items">
+                        <div class="legend-item">
+                            <span class="legend-color zone-a"></span>
+                            <span class="legend-text">Zone A: Easily visible (naked eye)</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color zone-b"></span>
+                            <span class="legend-text">Zone B: Visible (perfect conditions)</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color zone-c"></span>
+                            <span class="legend-text">Zone C: Optical aid to find</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color zone-d"></span>
+                            <span class="legend-text">Zone D: Visible with optical aid</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color khgt-line"></span>
+                            <span class="legend-text">Turkey 2016 / KHGT criterion</span>
+                        </div>
+                    </div>
+                    <p class="legend-note">
+                        The yellow line shows the Turkey 2016/KHGT criterion boundary 
+                        (elongation ≥ 8° AND moon altitude ≥ 5°).
+                    </p>
+                </div>
+            </div>
+        </main>
+
+        <!-- About Section -->
+        <section class="about" id="about-section">
+            <h2>About These Maps</h2>
+            
+            <div class="about-content">
+                <div class="about-item">
+                    <h3>🔬 Methodology</h3>
+                    <p>These maps use the <strong>Shaukat Criterion</strong> developed by Khalid Shaukat, 
+                    based on extensive analysis of historical crescent sighting data. The criterion 
+                    considers moon altitude, crescent width, and observing conditions to predict 
+                    visibility zones.</p>
+                </div>
+
+                <div class="about-item">
+                    <h3>📊 Zone Classification</h3>
+                    <ul>
+                        <li><strong>Zone A (Red):</strong> Crescent easily visible to naked eye under good conditions</li>
+                        <li><strong>Zone B (Magenta):</strong> Visible to naked eye only under perfect conditions</li>
+                        <li><strong>Zone C (Cyan):</strong> Optical aid needed to locate, then visible to naked eye</li>
+                        <li><strong>Zone D (Blue):</strong> Visible only with optical aid (binoculars/telescope)</li>
+                    </ul>
+                </div>
+
+                <div class="about-item">
+                    <h3>🔶 Turkey 2016 / KHGT Criterion</h3>
+                    <p>The yellow line represents the Turkey 2016 criterion (also known as KHGT), 
+                    which requires both elongation ≥ 8° AND moon altitude ≥ 5°. This is a simpler, 
+                    more conservative criterion used by some astronomical organizations.</p>
+                </div>
+
+                <div class="about-item">
+                    <h3>📅 Observation Dates</h3>
+                    <p>Each map shows visibility for the evening <em>before</em> the new Hijri month begins.
+                    This is when Muslim communities traditionally look for the new crescent moon to 
+                    determine the start of lunar months, especially for religious observances like 
+                    Ramadan and Eid celebrations.</p>
+                </div>
+
+                <div class="about-item">
+                    <h3>⚠️ Important Notes</h3>
+                    <ul>
+                        <li>These are theoretical predictions based on astronomical calculations</li>
+                        <li>Actual sighting depends on local weather, atmospheric conditions, and observer experience</li>
+                        <li>Always consult local religious authorities for official moon sighting announcements</li>
+                        <li>Maps use a 2° grid resolution for computational efficiency</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>
+                Maps generated using visibility calculations based on the 
+                <a href="http://moonsighting.com" target="_blank" rel="noopener">Shaukat Criterion</a>
+                developed by Khalid Shaukat at moonsighting.com.
+            </p>
+            <p>
+                Created with ❤️ for the Muslim community • 
+                Data covers Hijri years 1447-1452 (≈2025-2031 CE)
+            </p>
+            <p class="technical-note">
+                Technical implementation: PyEphem calculations, Shaukat/KHGT criteria, 
+                hijri-converter for date conversion
+            </p>
+        </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="app.js"></script>
+</body>
+</html>

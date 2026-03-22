@@ -1,0 +1,538 @@
+/* =============================================================================
+   Hilal Visibility Maps - CSS Stylesheet
+   Dark theme to match the black map backgrounds
+   ============================================================================= */
+
+/* CSS Reset & Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #0a0a0a;
+    color: #e0e0e0;
+    line-height: 1.6;
+    font-size: 16px;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* =============================================================================
+   Header Styles
+   ============================================================================= */
+
+.header {
+    text-align: center;
+    padding: 40px 0;
+    border-bottom: 2px solid #333;
+    margin-bottom: 30px;
+}
+
+.main-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+}
+
+.subtitle {
+    font-size: 1.4rem;
+    color: #ffd700;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.methodology {
+    font-size: 1rem;
+    color: #ccc;
+    font-style: italic;
+}
+
+/* =============================================================================
+   Navigation Styles
+   ============================================================================= */
+
+.navigation {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #1a1a1a;
+    border-radius: 12px;
+    border: 1px solid #333;
+}
+
+.year-selector {
+    margin-bottom: 20px;
+}
+
+.year-selector label {
+    display: inline-block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #ffd700;
+    font-size: 1.1rem;
+}
+
+#year-select {
+    width: 100%;
+    max-width: 300px;
+    padding: 12px 16px;
+    background-color: #2a2a2a;
+    color: #fff;
+    border: 2px solid #444;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+#year-select:hover, #year-select:focus {
+    border-color: #ffd700;
+    outline: none;
+}
+
+/* Month Grid */
+.month-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.month-btn {
+    padding: 12px 16px;
+    background-color: #333;
+    color: #fff;
+    border: 2px solid #444;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.month-btn:hover {
+    background-color: #444;
+    border-color: #ffd700;
+    transform: translateY(-2px);
+}
+
+.month-btn.active {
+    background-color: #ffd700;
+    color: #000;
+    border-color: #ffd700;
+    font-weight: 600;
+}
+
+.month-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* =============================================================================
+   Main Content Styles
+   ============================================================================= */
+
+.main-content {
+    margin-bottom: 40px;
+}
+
+/* Welcome Message */
+.welcome-message {
+    text-align: center;
+    padding: 60px 20px;
+    background-color: #1a1a1a;
+    border-radius: 12px;
+    border: 1px solid #333;
+    margin-bottom: 30px;
+}
+
+.welcome-message h2 {
+    font-size: 2.2rem;
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+.welcome-message p {
+    font-size: 1.1rem;
+    color: #ccc;
+    max-width: 800px;
+    margin: 0 auto 30px;
+}
+
+/* Legend Preview */
+.legend-preview h3 {
+    color: #ffd700;
+    margin-bottom: 15px;
+    font-size: 1.4rem;
+}
+
+.legend-items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* =============================================================================
+   Map Container Styles
+   ============================================================================= */
+
+.map-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    background-color: #1a1a1a;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid #333;
+}
+
+/* Info Panel */
+.info-panel {
+    background-color: #2a2a2a;
+    padding: 25px;
+    border-radius: 8px;
+    border: 1px solid #444;
+}
+
+.info-panel h2 {
+    font-size: 2rem;
+    color: #ffd700;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.map-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #444;
+}
+
+.detail-label {
+    font-weight: 600;
+    color: #ccc;
+}
+
+.detail-value {
+    font-weight: 400;
+    color: #fff;
+    text-align: right;
+}
+
+/* Map Display */
+.map-display {
+    text-align: center;
+    position: relative;
+}
+
+#map-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 2px solid #444;
+    background-color: #000;
+}
+
+.map-placeholder {
+    background-color: #2a2a2a;
+    border: 2px dashed #666;
+    border-radius: 8px;
+    padding: 60px 20px;
+    color: #ccc;
+    font-size: 1.1rem;
+}
+
+.map-placeholder p:first-child {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+}
+
+/* =============================================================================
+   Legend Styles
+   ============================================================================= */
+
+.legend {
+    background-color: #2a2a2a;
+    padding: 25px;
+    border-radius: 8px;
+    border: 1px solid #444;
+}
+
+.legend h3 {
+    color: #ffd700;
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+    text-align: center;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    padding: 4px 0;
+}
+
+.legend-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    margin-right: 12px;
+    border: 1px solid #666;
+    flex-shrink: 0;
+}
+
+.legend-text {
+    color: #e0e0e0;
+    font-size: 0.95rem;
+}
+
+/* Zone Colors - Matching the map generation script */
+.zone-a { background-color: #ff0000; } /* Red */
+.zone-b { background-color: #ff00ff; } /* Magenta */
+.zone-c { background-color: #00ffff; } /* Cyan */
+.zone-d { background-color: #0000ff; } /* Blue */
+.khgt-line { 
+    background-color: #ffff00; /* Yellow */
+    height: 4px;
+    border-radius: 2px;
+}
+
+.legend-note {
+    margin-top: 15px;
+    font-size: 0.85rem;
+    color: #aaa;
+    font-style: italic;
+    text-align: center;
+    padding-top: 10px;
+    border-top: 1px solid #444;
+}
+
+/* =============================================================================
+   About Section Styles
+   ============================================================================= */
+
+.about {
+    background-color: #1a1a1a;
+    padding: 40px 30px;
+    border-radius: 12px;
+    border: 1px solid #333;
+    margin-bottom: 30px;
+}
+
+.about h2 {
+    color: #ffd700;
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.about-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 25px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.about-item h3 {
+    color: #fff;
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.about-item p {
+    color: #ccc;
+    line-height: 1.7;
+    margin-bottom: 10px;
+}
+
+.about-item ul {
+    color: #ccc;
+    margin-left: 20px;
+    line-height: 1.7;
+}
+
+.about-item ul li {
+    margin-bottom: 6px;
+}
+
+.about-item strong {
+    color: #ffd700;
+}
+
+/* =============================================================================
+   Footer Styles
+   ============================================================================= */
+
+.footer {
+    text-align: center;
+    padding: 30px 20px;
+    border-top: 2px solid #333;
+    margin-top: 40px;
+    color: #999;
+}
+
+.footer p {
+    margin-bottom: 8px;
+    line-height: 1.6;
+}
+
+.footer a {
+    color: #ffd700;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.technical-note {
+    font-size: 0.85rem;
+    color: #666;
+    font-style: italic;
+}
+
+/* =============================================================================
+   Responsive Design
+   ============================================================================= */
+
+@media (min-width: 768px) {
+    .map-container {
+        grid-template-columns: 350px 1fr;
+        grid-template-rows: auto 1fr;
+        grid-template-areas: 
+            "info map"
+            "legend map";
+    }
+    
+    .info-panel {
+        grid-area: info;
+    }
+    
+    .map-display {
+        grid-area: map;
+    }
+    
+    .legend {
+        grid-area: legend;
+    }
+    
+    .map-details {
+        grid-template-columns: 1fr;
+    }
+    
+    .about-content {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+    
+    .main-title {
+        font-size: 2.5rem;
+    }
+    
+    .subtitle {
+        font-size: 1.2rem;
+    }
+    
+    .month-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .map-details {
+        grid-template-columns: 1fr;
+    }
+    
+    .legend-items {
+        gap: 6px;
+    }
+    
+    .about-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding: 20px 0;
+    }
+    
+    .main-title {
+        font-size: 2rem;
+    }
+    
+    .month-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .month-btn {
+        padding: 10px 14px;
+    }
+    
+    .info-panel, .legend {
+        padding: 20px;
+    }
+}
+
+/* =============================================================================
+   Utility Classes
+   ============================================================================= */
+
+.hidden {
+    display: none !important;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Loading animation for map image */
+.map-loading {
+    position: relative;
+}
+
+.map-loading::after {
+    content: "Loading map...";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ffd700;
+    font-size: 1.1rem;
+    background-color: rgba(0,0,0,0.8);
+    padding: 10px 20px;
+    border-radius: 6px;
+}
